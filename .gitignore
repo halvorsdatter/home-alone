@@ -1,5 +1,16 @@
-.env
+# Python
 venv/
-serviceAccountKey.json
 __pycache__/
 *.pyc
+
+# Secrets
+.env
+serviceAccountKey.json
+
+# Firebase local/cache files
+.firebase/
+firebase-debug.log
+firebase-debug.*.log
+
+# macOS
+.DS_Store
