@@ -1,89 +1,362 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Welcome to Firebase Hosting</title>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HOMESYS — Home Alone?</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
-    <!-- update the version number as needed -->
-    <script defer src="/__/firebase/12.17.1/firebase-app-compat.js"></script>
-    <!-- include only the Firebase features as you need -->
-    <script defer src="/__/firebase/12.17.1/firebase-auth-compat.js"></script>
-    <script defer src="/__/firebase/12.17.1/firebase-database-compat.js"></script>
-    <script defer src="/__/firebase/12.17.1/firebase-firestore-compat.js"></script>
-    <script defer src="/__/firebase/12.17.1/firebase-functions-compat.js"></script>
-    <script defer src="/__/firebase/12.17.1/firebase-messaging-compat.js"></script>
-    <script defer src="/__/firebase/12.17.1/firebase-storage-compat.js"></script>
-    <script defer src="/__/firebase/12.17.1/firebase-analytics-compat.js"></script>
-    <script defer src="/__/firebase/12.17.1/firebase-remote-config-compat.js"></script>
-    <script defer src="/__/firebase/12.17.1/firebase-performance-compat.js"></script>
-    <!-- 
-      initialize the SDK after all desired features are loaded, set useEmulator to false
-      to avoid connecting the SDK to running emulators.
-    -->
-    <script defer src="/__/firebase/init.js?useEmulator=true"></script>
+    body {
+      background: #c0c0c0;
+      font-family: 'Tahoma', 'MS Sans Serif', Arial, sans-serif;
+      font-size: 13px;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 16px 16px 48px;
+    }
 
-    <style media="screen">
-      body { background: #ECEFF1; color: rgba(0,0,0,0.87); font-family: Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 0; }
-      #message { background: white; max-width: 360px; margin: 100px auto 16px; padding: 32px 24px; border-radius: 3px; }
-      #message h2 { color: #ffa100; font-weight: bold; font-size: 16px; margin: 0 0 8px; }
-      #message h1 { font-size: 22px; font-weight: 300; color: rgba(0,0,0,0.6); margin: 0 0 16px;}
-      #message p { line-height: 140%; margin: 16px 0 24px; font-size: 14px; }
-      #message a { display: block; text-align: center; background: #039be5; text-transform: uppercase; text-decoration: none; color: white; padding: 16px; border-radius: 4px; }
-      #message, #message a { box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24); }
-      #load { color: rgba(0,0,0,0.4); text-align: center; font-size: 13px; }
-      @media (max-width: 600px) {
-        body, #message { margin-top: 0; background: white; box-shadow: none; }
-        body { border-top: 16px solid #ffa100; }
-      }
-    </style>
-  </head>
-  <body>
-    <div id="message">
-      <h2>Welcome</h2>
-      <h1>Firebase Hosting Setup Complete</h1>
-      <p>You're seeing this because you've successfully setup Firebase Hosting. Now it's time to go build something extraordinary!</p>
-      <a target="_blank" href="https://firebase.google.com/docs/hosting/">Open Hosting Documentation</a>
+    .window {
+      width: 100%;
+      max-width: 490px;
+      min-height: 520px;
+      display: flex;
+      flex-direction: column;
+      border-top:    2px solid #ffffff;
+      border-left:   2px solid #ffffff;
+      border-right:  2px solid #404040;
+      border-bottom: 2px solid #404040;
+      box-shadow: 1px 1px 0 #808080;
+      background: #c0c0c0;
+    }
+
+    /* On small screens, fill almost the whole viewport */
+    @media (max-width: 500px) {
+      body { padding: 8px 8px 40px; justify-content: flex-start; }
+      .window { min-height: calc(100dvh - 56px); }
+    }
+
+    .title-bar {
+      background: linear-gradient(to right, #b84a00, #f0892a);
+      padding: 5px 6px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      user-select: none;
+      flex-shrink: 0;
+    }
+
+    .title-bar-text {
+      color: #ffffff;
+      font-weight: bold;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .title-bar-controls { display: flex; gap: 2px; }
+
+    .win-btn {
+      width: 18px;
+      height: 16px;
+      background: #c0c0c0;
+      border-top:    1px solid #ffffff;
+      border-left:   1px solid #ffffff;
+      border-right:  1px solid #404040;
+      border-bottom: 1px solid #404040;
+      font-size: 9px;
+      line-height: 15px;
+      text-align: center;
+      cursor: default;
+    }
+
+    .window-body {
+      padding: 24px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    @media (max-width: 500px) {
+      .window-body { padding: 16px; }
+    }
+
+    .panel {
+      border-top:    2px solid #808080;
+      border-left:   2px solid #808080;
+      border-right:  2px solid #ffffff;
+      border-bottom: 2px solid #ffffff;
+      padding: 16px;
+      margin-bottom: 20px;
+    }
+
+    .headline {
+      font-size: 1.15rem;
+      font-weight: bold;
+      color: #b84a00;
+      margin-bottom: 6px;
+    }
+
+    .subline { font-size: 11px; color: #444; }
+
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 10px 14px;
+      margin-bottom: 10px;
+      background: #c0c0c0;
+      color: #000;
+      border-top:    2px solid #ffffff;
+      border-left:   2px solid #ffffff;
+      border-right:  2px solid #404040;
+      border-bottom: 2px solid #404040;
+      font-family: 'Tahoma', Arial, sans-serif;
+      font-size: 14px;
+      text-align: left;
+      cursor: pointer;
+      outline: none;
+      /* Larger touch target on mobile */
+      min-height: 44px;
+    }
+
+    .btn:hover  { background: #d4d4d4; }
+    .btn:active {
+      border-top:    2px solid #404040;
+      border-left:   2px solid #404040;
+      border-right:  2px solid #ffffff;
+      border-bottom: 2px solid #ffffff;
+      padding: 11px 13px 9px 15px;
+    }
+
+    .back-btn {
+      padding: 6px 12px;
+      margin-bottom: 16px;
+      background: #c0c0c0;
+      color: #000;
+      border-top:    2px solid #ffffff;
+      border-left:   2px solid #ffffff;
+      border-right:  2px solid #404040;
+      border-bottom: 2px solid #404040;
+      font-family: 'Tahoma', Arial, sans-serif;
+      font-size: 12px;
+      cursor: pointer;
+      outline: none;
+      min-height: 36px;
+    }
+    .back-btn:active {
+      border-top:    2px solid #404040;
+      border-left:   2px solid #404040;
+      border-right:  2px solid #ffffff;
+      border-bottom: 2px solid #ffffff;
+    }
+
+    .section-label {
+      font-size: 11px;
+      color: #b84a00;
+      font-weight: bold;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 8px;
+    }
+
+    @media (max-width: 400px) {
+      .grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    .card {
+      background: #c0c0c0;
+      border-top:    1px solid #ffffff;
+      border-left:   1px solid #ffffff;
+      border-right:  1px solid #404040;
+      border-bottom: 1px solid #404040;
+      padding: 12px 10px;
+      text-align: center;
+    }
+
+    .card-name { font-weight: bold; font-size: 13px; margin-bottom: 6px; }
+    .card-status { font-size: 12px; }
+    .is-home { color: #2ba556; }
+    .is-away { color: #808080; }
+
+    .dot {
+      display: inline-block;
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      margin-right: 4px;
+      vertical-align: middle;
+    }
+    .dot-home { background: #2ba556; }
+    .dot-away { background: #aaaaaa; }
+
+    .health-box {
+      border-top:    2px solid #808080;
+      border-left:   2px solid #808080;
+      border-right:  2px solid #ffffff;
+      border-bottom: 2px solid #ffffff;
+      padding: 24px;
+      font-size: 12px;
+      color: #444;
+      text-align: center;
+    }
+
+    .status-bar {
+      border-top: 1px solid #808080;
+      padding: 3px 8px;
+      font-size: 11px;
+      color: #444;
+      display: flex;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+
+    .status-panel {
+      border-top:    1px solid #808080;
+      border-left:   1px solid #808080;
+      border-right:  1px solid #ffffff;
+      border-bottom: 1px solid #ffffff;
+      padding: 1px 6px;
+    }
+
+    .taskbar {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      height: 32px;
+      background: #c0c0c0;
+      border-top: 2px solid #ffffff;
+      display: flex;
+      align-items: center;
+      padding: 0 4px;
+    }
+
+    .start-btn {
+      height: 24px;
+      padding: 0 10px;
+      background: #c0c0c0;
+      border-top:    2px solid #ffffff;
+      border-left:   2px solid #ffffff;
+      border-right:  2px solid #404040;
+      border-bottom: 2px solid #404040;
+      font-family: 'Tahoma', Arial, sans-serif;
+      font-size: 12px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .taskbar-clock {
+      margin-left: auto;
+      border-top:    1px solid #808080;
+      border-left:   1px solid #808080;
+      border-right:  1px solid #ffffff;
+      border-bottom: 1px solid #ffffff;
+      padding: 2px 8px;
+      font-size: 11px;
+    }
+
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+
+  <div class="window">
+    <div class="title-bar">
+      <div class="title-bar-text">🏠 HOMESYS — Home Alone?</div>
+      <div class="title-bar-controls">
+        <div class="win-btn">_</div>
+        <div class="win-btn">□</div>
+        <div class="win-btn">✕</div>
+      </div>
     </div>
-    <p id="load">Firebase SDK Loading&hellip;</p>
 
-    <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        const loadEl = document.querySelector('#load');
-        // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
-        // // The Firebase SDK is initialized and available here!
-        //
-        // firebase.auth().onAuthStateChanged(user => { });
-        // firebase.database().ref('/path/to/ref').on('value', snapshot => { });
-        // firebase.firestore().doc('/foo/bar').get().then(() => { });
-        // firebase.functions().httpsCallable('yourFunction')().then(() => { });
-        // firebase.messaging().requestPermission().then(() => { });
-        // firebase.storage().ref('/path/to/ref').getDownloadURL().then(() => { });
-        // firebase.analytics(); // call to activate
-        // firebase.analytics().logEvent('tutorial_completed');
-        // firebase.performance(); // call to activate
-        //
-        // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
+    <div class="window-body">
 
-        try {
-          let app = firebase.app();
-          let features = [
-            'auth', 
-            'database', 
-            'firestore',
-            'functions',
-            'messaging', 
-            'storage', 
-            'analytics', 
-            'remoteConfig',
-            'performance',
-          ].filter(feature => typeof app[feature] === 'function');
-          loadEl.textContent = `Firebase SDK loaded with ${features.join(', ')}`;
-        } catch (e) {
-          console.error(e);
-          loadEl.textContent = 'Error loading the Firebase SDK, check the console.';
-        }
+      <div id="view-landing">
+        <div class="panel">
+          <div class="headline">Are you home alone?</div>
+          <div class="subline">This service provides live information about which roommates are home right now.</div>
+        </div>
+        <button class="btn" onclick="showView('who')">🏠&nbsp; See who's home right now</button>
+        <button class="btn" onclick="showView('health')">📊&nbsp; Health dashboard</button>
+      </div>
+
+      <div id="view-who" class="hidden">
+        <button class="back-btn" onclick="showView('landing')">◀ Back</button>
+        <div class="section-label">Roommate status:</div>
+        <div class="grid" id="grid"></div>
+      </div>
+
+      <div id="view-health" class="hidden">
+        <button class="back-btn" onclick="showView('landing')">◀ Back</button>
+        <div class="section-label">📊 System health</div>
+        <div class="health-box">Under construction...</div>
+      </div>
+
+    </div>
+
+    <div class="status-bar">
+      <div class="status-panel" id="status-text">Ready</div>
+      <div class="status-panel" id="clock"></div>
+    </div>
+  </div>
+
+  <div class="taskbar">
+    <button class="start-btn">⊞ Start</button>
+    <div class="taskbar-clock" id="taskbar-clock"></div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getFirestore, collection, onSnapshot }
+      from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+    import { getAuth, signInAnonymously }
+      from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+    function tick() {
+      const t = new Date().toTimeString().slice(0, 5);
+      document.getElementById("clock").textContent = t;
+      document.getElementById("taskbar-clock").textContent = t;
+    }
+    tick(); setInterval(tick, 1000);
+
+    window.showView = id => {
+      ["landing", "who", "health"].forEach(v =>
+        document.getElementById("view-" + v).classList.toggle("hidden", v !== id)
+      );
+      const labels = { landing: "Ready", who: "Occupancy status", health: "System health" };
+      document.getElementById("status-text").textContent = labels[id];
+    };
+
+    const app = initializeApp({
+      apiKey:     "AIzaSyAdIdYyveAd8W8yFg1N2jlapRjlPLjWCBw",
+      authDomain: "home-alone-e5e32.firebaseapp.com",
+      projectId:  "home-alone-e5e32",
+    });
+
+    await signInAnonymously(getAuth(app));
+
+    onSnapshot(collection(getFirestore(app), "roommates"), snap => {
+      const grid = document.getElementById("grid");
+      grid.innerHTML = "";
+      snap.docs.sort((a, b) => a.id.localeCompare(b.id)).forEach(doc => {
+        const home = doc.data().isHome;
+        grid.innerHTML += `
+          <div class="card">
+            <div class="card-name">${doc.id}</div>
+            <div class="card-status ${home ? "is-home" : "is-away"}">
+              <span class="dot ${home ? "dot-home" : "dot-away"}"></span>${home ? "Home" : "Away"}
+            </div>
+          </div>`;
       });
-    </script>
-  </body>
+    });
+  </script>
+</body>
 </html>
