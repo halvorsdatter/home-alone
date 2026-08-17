@@ -333,7 +333,7 @@
       ["landing", "who", "health"].forEach(v =>
         document.getElementById("view-" + v).classList.toggle("hidden", v !== id)
       );
-      const labels = { landing: "Ready", who: "Occupancy status", health: "System health" };
+      const labels = { landing: "Ready", who: "Roommate status", health: "System health" };
       document.getElementById("status-text").textContent = labels[id];
     };
 
