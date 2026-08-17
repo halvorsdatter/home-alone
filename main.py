@@ -1,11 +1,17 @@
-import cv2, queue, threading, traceback
+import queue
+import threading
+import traceback
+
+import cv2
+
 from camera import create_camera
 from config import *
 from door import DoorClassifier
-from tracker import CentroidTracker
-from face_worker import FaceWorker
 from event_logic import EventLogic
+from face_worker import FaceWorker
 from firebase_writer import FirebaseWriter
+from tracker import CentroidTracker
+
 
 def main():
     home_now = input("Who is currently home? (comma-separated, or Enter): ")
@@ -60,7 +66,7 @@ def main():
             door_state, _ = door_clf.predict(frame_bgr)
             event_logic.update(tracker.snapshot(), door_state)
 
-        except Exception:
+        except (OSError, RuntimeError, ValueError):
             traceback.print_exc()
 
 if __name__ == "__main__":

@@ -1,8 +1,13 @@
 # face_worker.py
-import threading, json, numpy as np
+import json
+import threading
+
+import numpy as np
 from insightface.app import FaceAnalysis
+
+from config import ARCFACE_MATCH_THRESHOLD, FACE_TRACK_ASSOC_DIST, INSIGHTFACE_MODEL
 from utils import cosine_distance
-from config import (INSIGHTFACE_MODEL, ARCFACE_MATCH_THRESHOLD, FACE_TRACK_ASSOC_DIST)
+
 
 class FaceWorker(threading.Thread):
     """
@@ -25,7 +30,8 @@ class FaceWorker(threading.Thread):
                 "data/enrollments.json not found. "
                 "Run `python enroll.py` for each roommate first."
             )
-        raw = json.load(open("data/enrollments.json"))
+        with open("data/enrollments.json") as f:
+            raw = json.load(f)
         self.names      = list(raw.keys())
         self.prototypes = {nm: np.array(raw[nm]["prototype"]) for nm in self.names}
         # InsightFace expects BGR — same as OpenCV, same as what camera.py returns

@@ -1,6 +1,12 @@
 # door.py
-import pickle, numpy as np, cv2, os
+import os
+import pickle
+
+import cv2
+import numpy as np
+
 from config import DOOR_ROI
+
 
 class DoorClassifier:
     def __init__(self, path="models/door_classifier.pkl"):

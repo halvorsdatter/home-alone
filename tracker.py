@@ -1,9 +1,18 @@
 # tracker.py
-import numpy as np, threading
+import threading
 from collections import deque
-from config import (MAX_DISAPPEARED_FRAMES, DIRECTION_HISTORY_LEN, DIRECTION_MIN_FRAMES,
-                    DOOR_ZONE, CENTROID_MATCH_DIST, IDENTITY_LOCK_VOTES,
-                    DIRECTION_MOVEMENT_THRESHOLD)
+
+import numpy as np
+
+from config import (
+    CENTROID_MATCH_DIST,
+    DIRECTION_HISTORY_LEN,
+    DIRECTION_MIN_FRAMES,
+    DIRECTION_MOVEMENT_THRESHOLD,
+    DOOR_ZONE,
+    IDENTITY_LOCK_VOTES,
+    MAX_DISAPPEARED_FRAMES,
+)
 
 _ZX, _ZY, _ZW, _ZH = DOOR_ZONE
 DOOR_ZONE_CX = _ZX + _ZW // 2

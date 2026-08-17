@@ -1,4 +1,5 @@
-from tracker import Track, DOOR_ZONE_CX, DOOR_ZONE_CY
+from tracker import DOOR_ZONE_CX, DOOR_ZONE_CY, Track
+
 
 def test_direction_approaching():
     t = Track(1, (400, 240), (0, 0, 0, 0))

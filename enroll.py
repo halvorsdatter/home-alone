@@ -1,7 +1,12 @@
-import cv2, json, os, numpy as np
+import json
+import os
+
+import cv2
+import numpy as np
 from insightface.app import FaceAnalysis
+
 from camera import create_camera
-from config import CAPTURE_WIDTH, CAPTURE_HEIGHT, INSIGHTFACE_MODEL
+from config import CAPTURE_HEIGHT, CAPTURE_WIDTH, INSIGHTFACE_MODEL
 
 app = FaceAnalysis(name=INSIGHTFACE_MODEL, providers=["CPUExecutionProvider"])
 app.prepare(ctx_id=0, det_size=(CAPTURE_WIDTH, CAPTURE_HEIGHT))
@@ -29,9 +34,14 @@ def enroll(name, n_frames=80):
     anchor_mean = np.mean(embeddings, axis=0)
     anchor_mean /= np.linalg.norm(anchor_mean) + 1e-8
     db_path = "data/enrollments.json"
-    db = json.load(open(db_path)) if os.path.exists(db_path) else {}
+    if os.path.exists(db_path):
+        with open(db_path) as f:
+            db = json.load(f)
+    else:
+        db = {}
     db[name] = {"anchors": embeddings, "prototype": anchor_mean.tolist()}
-    json.dump(db, open(db_path, "w"))
+    with open(db_path, "w") as f:
+        json.dump(db, f)
     print(f"\nSaved {len(embeddings)} anchors for {name}.")
 
 if __name__ == "__main__":

@@ -1,6 +1,8 @@
 # event_logic.py
 import time
-from config import EVENT_WINDOW_CLOSE_GRACE, EVENT_COOLDOWN
+
+from config import EVENT_COOLDOWN, EVENT_WINDOW_CLOSE_GRACE
+
 
 class EventLogic:
     def __init__(self, write_queue):

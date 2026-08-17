@@ -1,5 +1,7 @@
 import queue
+
 from event_logic import EventLogic
+
 
 def make(): q = queue.Queue(); return EventLogic(q), q
 

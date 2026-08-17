@@ -1,4 +1,7 @@
-import os, cv2, numpy as np
+import os
+
+import cv2
+import numpy as np
 
 # CAMERA_BACKEND (set in .env or shell):
 #   auto (default)        — detects Pi or falls back to webcam
